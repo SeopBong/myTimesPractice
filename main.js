@@ -12,7 +12,6 @@ const getNews = async()=>{      //try-catch-throw-error 로 에러헨들링 진�
             "x-api-key": "cLPujLcv5bDuhDkxAY1pq4qEaG7zUADm0gDBl9fSRzQ",
         });
         url.searchParams.set('page',page);  // &page= 를 추가한다는 코드
-        console.log("url은??",url);
         let response = await fetch  (url, { headers: header });
         let data = await response.json();
 
@@ -21,7 +20,8 @@ const getNews = async()=>{      //try-catch-throw-error 로 에러헨들링 진�
                 throw new Error("검색 된 뉴스가 없습니다.");
             }
             news = data.articles;
-            total_pages = data.total_pages;
+            total_pages = 3;
+            //total_pages = data.total_pages;   //2023-01-13 이거 바꾸다가 api 기간 끝남 ㅠㅠ
             page = data.page;
             render();
             pageNation();
@@ -87,27 +87,100 @@ const pageNation = () => {
     //total_page
     //page
     //page group
-    let pageGroup = Math.ceil(page/5);
+    let pageGroup = Math.ceil(page/6);
     //last
     let last = pageGroup * 5;
     //first
     let first = last - 4;
     //first~last 페이지 프린트
-    pagenationHTML = `<li class="page-item">
-    <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-1})">
-      <span aria-hidden="true">&lt;</span>
-    </a>
-    </li>`;
+    
+//     pagenationHTML = `<li class="page-item">
+//     <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${1})">
+//       <span aria-hidden="true">&laquo;</span>
+//     </a>
+//     </li>`; // <<
+    
+//     pagenationHTML += `<li class="page-item">
+//     <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-1})">
+//       <span aria-hidden="true">&lt;</span>
+//     </a>
+//     </li>`; // <
 
-    for(let i = first; i < last; i++) {
-        pagenationHTML += ` <li class="page-item ${page==i?"active" : ""} "><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
-    };
+//     for(let i = first; i < last; i++) {
+//         pagenationHTML += ` <li class="page-item ${page==i?"active" : ""} "><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
+//     };      // 내부 페이지 1~4
 
-    pagenationHTML +=`<li class="page-item">
-    <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${page+1})">
-      <span aria-hidden="true">&gt;</span>
-    </a>
-  </li>`;
+//     pagenationHTML +=`<li class="page-item">
+//     <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${page+1})">
+//       <span aria-hidden="true">&gt;</span>
+//     </a>
+//   </li>`;   // >
+//   pagenationHTML +=`<li class="page-item">
+//     <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${page+1})">
+//       <span aria-hidden="true">&raquo;</span>
+//     </a>
+//   </li>`;   // >>
+    if(page == 1) {     //앞쪽 < << 없애기
+        for(let i = first; i <= last; i++) {
+            pagenationHTML += ` <li class="page-item ${page==i?"active" : ""} "><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
+        };      // 내부 페이지 1~4
+    
+        pagenationHTML +=`<li class="page-item">
+        <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${page+1})">
+          <span aria-hidden="true">&gt;</span>
+        </a>
+      </li>`;   // >
+      pagenationHTML +=`<li class="page-item">
+        <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${last})">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>`; 
+    }else if(page == last){ // 뒤쪽 > >> 없애기
+        pagenationHTML = `<li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${1})">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+        </li>`; // <<
+        
+        pagenationHTML += `<li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${last})">
+          <span aria-hidden="true">&lt;</span>
+        </a>
+        </li>`; // <
+    
+        for(let i = first; i <= last; i++) {
+            pagenationHTML += ` <li class="page-item ${page==i?"active" : ""} "><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
+        };      // 내부 페이지 1~4
+    }
+    else {
+        pagenationHTML = `<li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${1})">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+        </li>`; // <<
+        
+        pagenationHTML += `<li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${last})">
+          <span aria-hidden="true">&lt;</span>
+        </a>
+        </li>`; // <
+    
+        for(let i = first; i <= last; i++) {
+            pagenationHTML += ` <li class="page-item ${page==i?"active" : ""} "><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
+        };      // 내부 페이지 1~4
+    
+        pagenationHTML +=`<li class="page-item">
+        <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${page+1})">
+          <span aria-hidden="true">&gt;</span>
+        </a>
+      </li>`;   // >
+      pagenationHTML +=`<li class="page-item">
+        <a class="page-link" href="#" aria-label="Next"onclick="moveToPage(${last})">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>`;   // >>
+    }
+    console.log("현재페이지는",page);
 
     document.querySelector(".pagination").innerHTML = pagenationHTML;
 }
@@ -118,3 +191,8 @@ const moveToPage = (pageNum) => {
 
 searchButton.addEventListener("click", getNewsByKeyword);
 getLatestNews();
+
+// total page가 3일 경우 3개의 페이지만 프린트 하는법 last와 first의 조건을 바꿔줘야한다.
+// << >> 버튼 만들기                 //////////////////////////////////////////////////////////////////////////////////////////////////////
+// 내가 그룹1일때 << < 이 버튼이 없다 //////////////////////////////////////////////////////////////////////////////////////////////////////
+// 내가 마지막 그룹일때 > >> 이 버튼이 없다 ////////////////////////////////////////////////////////////////////////////////////////////////
