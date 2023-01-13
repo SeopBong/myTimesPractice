@@ -1,0 +1,33 @@
+.head-line{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+}
+.head-line svg{
+    width: 400px;
+}
+.menus{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /*매뉴들이 작아지면 해당 웹의 크기만큼 다시 재정렬을 한다(고오급 잔잔바리기술)*/
+    border-top: 1px solid #ededed;
+    border-bottom: 4px double black;
+}
+.menus button{
+    border: none;
+    background: none;
+    margin: 5px;
+}
+.menus button:hover{        /* 해당 영역 위에 마우스가 들어가면 발생되는 이벤트*/
+    background-color: beige;
+}
+.news-img-size{
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+    margin-bottom: 2px;
+}
+.news{
+    border-bottom: 2px solid black;
+}
